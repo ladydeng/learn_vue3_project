@@ -12,3 +12,16 @@
   
   ## npm run build 报错， 修改package.json的script下的"build": "vue-tsc && vite build"改为"build": "vite build",
 
+  ## ts文件中使用使用 process.env.NODE_ENV 报错
+  参考文档：https://blog.csdn.net/m0_47657987/article/details/117332454
+
+  ## 报错：Property '$store' does not exist on type 
+  在src下新建.d.ts文件进行配置
+  参考文档：https://stackoverflow.com/questions/65237129/property-store-does-not-exist-on-type-componentpublicinstance-using-vuex-4
+
+  ## 报错：An import declaration can only be used
+  把所有的import放到顶部
+
+  ## props声明默认值的几种方式
+  参考文档：https://blog.csdn.net/weixin_40283749/article/details/127784247
+

@@ -12,12 +12,12 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-    history: createWebHistory('dist'),
+    history: createWebHistory(process.env.NODE_ENV === 'production' ? 'dist' : ''),
     routes
 })
 
 router.beforeEach((to, from) => {
-    console.log("=============")
+    console.log("=============", process.env.NODE_ENV)
 })
 
 export default router

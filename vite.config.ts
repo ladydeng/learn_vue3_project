@@ -8,7 +8,10 @@ import { fileURLToPath, URL } from "node:url"
 
 // https://vitejs.dev/config/  官方配置文档
 export default defineConfig({
-  base:'/dist/',  //开发或生产环境服务的公共基础路径
+  base: process.env.NODE_ENV === 'production' ? '/dist/' : '/',  //开发或生产环境服务的公共基础路径
+  build:{
+    chunkSizeWarningLimit: 1500, //加大打包文件大小限制
+  },
   plugins: [
     vue(),
     AutoImport({

@@ -1,42 +1,49 @@
 <template>
-  <div>
-    <el-button type="success">Success</el-button>
-    <span @click.stop="toggleDark()">暗黑模式</span>
-    <el-switch size="small" v-model="isDark"/>
-    <HelloWorld ref="helloworld" msg="Vite + Vue" :list="list" @ageAdd="ageAdd"/>
+    <span @click.stop="toggleDark()">暗黑模式sum:{{ $store().sum }}\doubleSum:{{ $store().doubleSum }}</span>
+    <el-switch size="small" v-model="isDark" />
+    <HelloWorld
+        ref="helloworld"
+        msg="Vite + Vue"
+        :list="list"
+        @ageAdd="ageAdd"
+    />
     <el-button type="danger" @click="changeChild()">调用子组件的方法</el-button>
-  </div>
+    <el-button type="danger" @click="$store().changeSum(2)">点击sum-2</el-button>
 </template>
 
 <script setup lang="ts">
-  import HelloWorld from "../components/HelloWorld.vue"
-  import { onMounted, getCurrentInstance, reactive, ref } from 'vue';
-  const { proxy } = getCurrentInstance() as any;
-  
-  import { useDark, useToggle } from '@vueuse/core'
-  const isDark = useDark()
-  const toggleDark = useToggle(isDark)
+import { useDark, useToggle } from "@vueuse/core";
+import HelloWorld from "../components/HelloWorld.vue";
+import { onMounted, getCurrentInstance, reactive, ref } from "vue";
+const { proxy } = getCurrentInstance() as any;
+const isDark = useDark();
+const toggleDark = useToggle(isDark);
 
-  const list = reactive([
-    { name:'lili', age:18 },
-    { name:'lilie', age:18 },
-  ])
+interface ListItem{
+    name: string,
+    age: number,
+    intro?: () => void
+}
+const list = reactive<ListItem[]>([
+    { name: "lili", age: 18, intro: () => { console.log("my name is lili") } },
+    { name: "lilie", age: 18, intro: () => { console.log("my name is lilie") } },
+]);
 
-  const ageAdd = (index:Number):void => {
-    list[index].age = list[index].age + 1
-  }
+const ageAdd = (index: number): void => {
+    list[index].age = list[index].age + 1;
+};
 
-  const helloworld = ref()
-  const changeChild = ():void =>{
-    helloworld.value.getSomething()
-  }
+const helloworld = ref();
+const changeChild = (): void => {
+    helloworld.value.getSomething();
+};
 
-  onMounted(()=>{
-    console.log(proxy.websiteTitle)
-  })
-
+onMounted(() => {
+    console.log(proxy.websiteTitle);
+    // 获取store里的state
+    console.log( proxy.$store().sum)
+});
 </script>
 
 <style scoped>
-
 </style>
