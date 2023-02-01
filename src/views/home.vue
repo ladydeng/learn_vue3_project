@@ -52,7 +52,7 @@ onMounted(() => {
 import {defineComponent, defineAsyncComponent, ref, reactive, getCurrentInstance, onMounted, nextTick} from "vue"
 import HelloWorld from "../components/HelloWorld.vue";
 export default defineComponent({
-    setup(){
+    setup(props, { attrs, slots, emit, expose }){
         const { proxy } = getCurrentInstance();
         interface ListItem{
             name: string,
