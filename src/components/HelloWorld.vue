@@ -1,5 +1,5 @@
 <template>
-    <h1>{{ msg }}{{ num }}</h1>
+    <h1>{{ msg }}--{{ num }}</h1>
     <h2>--{{ proxy.websiteTitle }}--</h2>
     <div class="item" v-for="(item, index) in list" :key="index">
         <p>{{ index + 1 }}、{{ item.name }} - {{ item.age }}</p>
@@ -7,10 +7,9 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import {
     reactive,
-    toRefs,
     getCurrentInstance,
     ref,
     computed,
@@ -19,7 +18,6 @@ import {
     useAttrs,
 } from "vue";
 const { proxy } = getCurrentInstance() as any;
-
 
 interface ListItem{
     name: string,
@@ -39,8 +37,9 @@ const ageAdd = (index: number): void => {
     emits("ageAdd", index);
 };
 
-const num = ref(0);
-const doubleNum = computed(() => (num.value *= 2)); // 注意，这里的doubleNum是一个proxy，需要通过doubleNum.value获取原值
+const num = ref(3);
+// 注意，这里的doubleNum是一个proxy，需要通过doubleNum.value获取原值
+const doubleNum = computed(() => (num.value *= 2));
 
 // const props = defineProps<Props>()
 // 通过withDefaults给Props设置默认值，还是使用上面的那个例子
@@ -52,20 +51,20 @@ const props = withDefaults(defineProps<Props>(), {
 // 通过defineExpose将子组件的方法或属性暴露给父组件
 const getSomething = (): void => {
     num.value++;
-    console.log(doubleNum.value);
+    // console.log(doubleNum.value);
 };
 defineExpose({
     getSomething,
 });
 
 // 普通监听
-watch(doubleNum, (val:number):void => {
+watch(num, (val:number):void => {
     console.log(val, "watcher");
 });
 
 // 深层监听
 watch(
-    () => doubleNum,
+    () => num,
     (val) => {
         console.log(val.value, "deeep watcher");
     },
@@ -76,6 +75,54 @@ const slots = useSlots();
 const attrs = useAttrs();
 console.log(slots);
 console.log(attrs);
+
+</script> -->
+
+<script lang="ts">
+import { rowProps } from "element-plus";
+import { defineComponent, getCurrentInstance, defineEmits, ref, withDefaults, defineProps } from "vue"
+export default defineComponent({
+    props:{
+        msg: String,
+        list: {
+            type: Array,
+            default: () => []
+        }
+    },
+    emits:['ageAdd'],  // 声明emit事件
+    // expose:['getSomething'],  //声明暴露的事件
+    setup(props, context){
+        const { proxy } = getCurrentInstance() as any;
+        const num = ref(3);
+
+        // 透传 Attributes（非响应式的对象，等价于 $attrs）
+        // console.log(context.attrs)
+
+        // 插槽（非响应式的对象，等价于 $slots）
+        // console.log(context.slots)
+
+        // 触发事件（函数，等价于 $emit）
+        // console.log(context.emit)
+
+        // 暴露公共属性（函数）
+        // console.log(context.expose)
+        const ageAdd = (index: number): void => {
+            context.emit("ageAdd", index);
+        };
+
+        const getSomething = (): void => {
+            num.value++;
+        };
+        context.expose({ getSomething })
+
+
+        return {
+            proxy,
+            num,
+            ageAdd
+        }
+    }, 
+})
 </script>
 
 <style scoped lang="scss">
