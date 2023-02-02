@@ -9,6 +9,7 @@ import './style.css'
 
 import App from './App.vue'
 const app = createApp(App)
+// console.log(app) 
 
 // 定义全局变量
 app.config.globalProperties.websiteTitle = "***管理系统";

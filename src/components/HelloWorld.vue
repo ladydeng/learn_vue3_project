@@ -4,6 +4,7 @@
     <div class="item" v-for="(item, index) in list" :key="index">
         <p>{{ index + 1 }}、{{ item.name }} - {{ item.age }}</p>
         <el-button @click="ageAdd(index)">点击年龄+1</el-button>
+        <div>{{ x }}---{{ y }}</div>
     </div>
 </template>
 
@@ -81,6 +82,7 @@ console.log(attrs);
 <script lang="ts">
 import { rowProps } from "element-plus";
 import { defineComponent, getCurrentInstance, defineEmits, ref, withDefaults, defineProps } from "vue"
+import { getPosition } from "../compositionApi/getPosition"
 export default defineComponent({
     props:{
         msg: String,
@@ -90,7 +92,6 @@ export default defineComponent({
         }
     },
     emits:['ageAdd'],  // 声明emit事件
-    // expose:['getSomething'],  //声明暴露的事件
     setup(props, context){
         const { proxy } = getCurrentInstance() as any;
         const num = ref(3);
@@ -114,12 +115,15 @@ export default defineComponent({
             num.value++;
         };
         context.expose({ getSomething })
-
+        
+        const { x, y } = getPosition()
 
         return {
             proxy,
             num,
-            ageAdd
+            ageAdd,
+            x,
+            y
         }
     }, 
 })

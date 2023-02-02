@@ -9,6 +9,7 @@
     />
     <el-button type="danger" @click="changeChild()">调用子组件的方法</el-button>
     <el-button type="danger" @click="$store().changeSum(2)">点击sum-2</el-button>
+    <div>{{ x }}---{{ y }}</div>
 </template>
 
 <!-- setup语法糖写法 -->
@@ -51,6 +52,7 @@ onMounted(() => {
 <script lang="ts">
 import {defineComponent, defineAsyncComponent, ref, reactive, getCurrentInstance, onMounted, nextTick} from "vue"
 import HelloWorld from "../components/HelloWorld.vue";
+import { getPosition } from "../compositionApi/getPosition"
 export default defineComponent({
     setup(props, { attrs, slots, emit, expose }){
         const { proxy } = getCurrentInstance();
@@ -70,19 +72,24 @@ export default defineComponent({
         
         const changeChild = (): void => {
             // 调用子组件的方法
-            proxy.$refs.helloworld.getSomething() 
+            // var helloworld = ref()
+            // console.log(helloworld)  //undefined
+            proxy.$refs.helloworld.getSomething()
         };
 
         onMounted(() => {
             
         })
 
+        const { x, y } = getPosition()
+
         return {
-            list, ageAdd, changeChild
+            list, ageAdd, changeChild, x, y
         }
     },
     components:{
-        HelloWorld: defineAsyncComponent(() => import("../components/HelloWorld.vue"))
+        // HelloWorld: defineAsyncComponent(() => import("../components/HelloWorld.vue"))
+        HelloWorld
     },
     mounted() {
         // console.log(this.$store)
