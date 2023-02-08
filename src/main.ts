@@ -12,6 +12,7 @@ const app = createApp(App)
 // console.log(app) 
 
 // 定义全局变量
+// ComponentCustomProperties用于增强组件实例类型以支持自定义全局属性，为每个自定义的全局属性在.d.ts或者.ts文件中进行声明。
 app.config.globalProperties.websiteTitle = "***管理系统";
 app.config.globalProperties.$router = router;
 app.config.globalProperties.$store = useStore;

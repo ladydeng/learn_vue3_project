@@ -1,6 +1,6 @@
 <template>
     <h1>{{ msg }}--{{ num }}</h1>
-    <h2>--{{ proxy.websiteTitle }}--</h2>
+    <h2 v-once>--{{ proxy.websiteTitle }}--</h2>
     <div class="item" v-for="(item, index) in list" :key="index">
         <p>{{ index + 1 }}、{{ item.name }} - {{ item.age }}</p>
         <el-button @click="ageAdd(index)">点击年龄+1</el-button>
@@ -28,7 +28,8 @@ interface ListItem{
 // 养成好习惯，给每一个Props创建interface
 interface Props {
     msg: string;
-    list: ListItem[];  // 对象数组声明写法一
+    list: ListItem[];
+    list: [] as ListItem[];  // 对象数组声明写法一
     // list: Array<ListItem>;  // 对象数组声明写法二
 }
 
@@ -81,15 +82,28 @@ console.log(attrs);
 
 <script lang="ts">
 import { rowProps } from "element-plus";
-import { defineComponent, getCurrentInstance, defineEmits, ref, withDefaults, defineProps } from "vue"
+import { defineComponent, getCurrentInstance, ref, PropType } from "vue"
 import { getPosition } from "../compositionApi/getPosition"
+type ListItem = {
+    name: string,
+    age: number,
+    intro?: () => void
+}
+
+interface List {
+    [index: number]: ListItem
+}
 export default defineComponent({
     props:{
         msg: String,
-        list: {
-            type: Array,
-            default: () => []
-        }
+        // 法一：
+        // list: {
+        //     type: Array,
+        //     default: () => []
+        // }
+        // 法二：通过ProType为数组定义一个更为具体的类型
+        list: Array as PropType<List>
+
     },
     emits:['ageAdd'],  // 声明emit事件
     setup(props, context){
