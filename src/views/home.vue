@@ -58,8 +58,8 @@ import {defineComponent, defineAsyncComponent, ref, reactive, getCurrentInstance
 import HelloWorld from "../components/HelloWorld.vue";
 import { getPosition } from "../compositionApi/getPosition"
 import { useDark, useToggle } from "@vueuse/core";
-import { List } from "@/assets/api/home"
-// import { List } from "../api/home"
+import { List } from "@/type/home"
+// import { List } from "../type/home"
 export default defineComponent({
     setup(props, { attrs, slots, emit, expose }){
         // const { attrs, slots, emit, expose } = context  //context上下文对象，通过对象结构获取里面的内置方法

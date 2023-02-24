@@ -25,6 +25,21 @@
   ## props声明默认值的几种方式
   参考文档：https://blog.csdn.net/weixin_40283749/article/details/127784247
 
+  ## 运行项目报错 ** is not defined in vue 
+  原因：typescript版本太低
+  解决办法：升级typescript版本
+
+  ## npm instal 报错：（vite+vue3项目完全可以使用node V14和npm V6），报错node版本为node V16.16.0 和npm V8
+   1、错误信息："config global `--global`, `--local` are deprecated. Use `--location=global` instead"
+      参考文档：https://blog.csdn.net/m0_49072553/article/details/127204821
+   2、错误信息：Unexpected token '.'
+      解决办法：降低node和npm版本（可以试用nvm工具），再install一下就可以了
+  
+  ## npm run dev 报错
+    错误信息：The package "@esbuild/win32-x64" could not be found, and is needed by esbuild.
+    解决办法：npm i esbuild-windows-64   安装依赖， 这是用于esbuild的Windows 64位二进制文件，它是一个JavaScript捆绑程序和minifier
+    参考文档：https://blog.csdn.net/sunnyboysix/article/details/121931067
+
   ## type与interface的异同
   异：
     1、type在声明类型别名之后实际上是一个赋值操作，它需要将别名与类型关联起来，也就是说类型别名不会创建出一种新的类型，它只是给已有类型命名并进行直接引用；interface是定义一个接口类型。
@@ -86,7 +101,15 @@
     `
   参考文档：https://www.jb51.net/article/266236.htm
 
+  ## 路由别名配置: 只需要在vite.config.ts里面配置alias就可
+
   ##  使用别名@，开发环境不报错，在打包时报错：Cannot find module '@/assets/api/home' or its corresponding type declarations.
+    报错原因：1、package.json => script => build 打包时使用了vue-tsc插件校验
+             2、tsconfig.json中的路由别名配置不正确
+    解决办法：1、去掉build的vue-tsc
+             2、暂无解决办法（别名配置问题？）----问题已解决，在tsconfig.json中配置一下路由别名paths与baseUrl
+
+
 
 
 

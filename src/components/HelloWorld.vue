@@ -29,7 +29,7 @@ interface ListItem{
 interface Props {
     msg: string;
     list: ListItem[];
-    list: [] as ListItem[];  // 对象数组声明写法一
+    // list: [] as ListItem[];  // 对象数组声明写法一
     // list: Array<ListItem>;  // 对象数组声明写法二
 }
 
