@@ -103,13 +103,13 @@
 
   ## 路由别名配置: 只需要在vite.config.ts里面配置alias就可
 
-  ##  使用别名@，开发环境不报错，在打包时报错：Cannot find module '@/assets/api/home' or its corresponding type declarations.
+  ## 使用别名@，开发环境不报错，在打包时报错：Cannot find module '@/assets/api/home' or its corresponding type declarations.
     报错原因：1、package.json => script => build 打包时使用了vue-tsc插件校验
              2、tsconfig.json中的路由别名配置不正确
     解决办法：1、去掉build的vue-tsc
              2、暂无解决办法（别名配置问题？）----问题已解决，在tsconfig.json中配置一下路由别名paths与baseUrl
-
-
-
-
+  
+  ## Module '"../../../node_modules/vue/dist/vue"' has no exported member 'onMounted'.
+    报错原因：typescript 3.9.3版本问题，更新为typecript4.3.5版本解决。
+    解决：删掉package-lock.json；修改 package.json 文件中typescript节点为  "typescript": "4.3.5"；npm i；
 
