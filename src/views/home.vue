@@ -17,10 +17,12 @@
 </template>
 
 <!-- setup语法糖写法 -->
-<!-- <script setup lang="ts">
+<script setup lang="ts">
+import { useStore1 } from "../store/index"
 import { useDark, useToggle } from "@vueuse/core";
 import HelloWorld from "../components/HelloWorld.vue";
-import { onMounted, getCurrentInstance, reactive, ref } from "vue";
+import { getPosition } from "../compositionApi/getPosition"
+import { onMounted, getCurrentInstance, reactive, ref, watch } from "vue";
 const { proxy } = getCurrentInstance() as any;
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
@@ -30,6 +32,8 @@ interface ListItem{
     age: number,
     intro?: () => void
 }
+const { x, y } = getPosition()
+const store = useStore1()
 const list = reactive<ListItem[]>([
     { name: "lili", age: 18, intro: () => { console.log("my name is lili") } },
     { name: "lilie", age: 18, intro: () => { console.log("my name is lilie") } },
@@ -45,15 +49,27 @@ const changeChild = (): void => {
 };
 
 onMounted(() => {
-    console.log(proxy.websiteTitle);
+    // console.log(proxy.websiteTitle);
     // 获取store里的state
-    console.log( proxy.$store().sum)
-    console.log(proxy.$store)
+    // console.log( proxy.$store().sum)
+    // console.log(proxy.$store)
 });
-</script> -->
+
+// watch(store.num,(newVal, oldVal) => {
+//         console.log("store.num change-------", newVal, oldVal)
+//     }
+// );
+console.log(store.sum)
+watch(
+    () => store.sum,
+    (newVal, oldVal) => {
+        console.log("store.num change-------", newVal, oldVal)
+    }
+);
+</script>
 
 <!-- defineComponent写法 -->
-<script lang="ts">
+<!-- <script lang="ts">
 import {defineComponent, defineAsyncComponent, ref, reactive, getCurrentInstance, onMounted, nextTick} from "vue"
 import HelloWorld from "../components/HelloWorld.vue";
 import { getPosition } from "../compositionApi/getPosition"
@@ -118,7 +134,7 @@ export default defineComponent({
         // console.log(this.$store)
     },
 })
-</script>
+</script> -->
 
 <style scoped>
    .home{

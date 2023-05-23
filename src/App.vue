@@ -3,6 +3,6 @@
   <router-view></router-view>
 </template>
 
-<script setup lang="ts">
-console.log("setup")
+<script lang="ts">
+// console.log("setup")
 </script>

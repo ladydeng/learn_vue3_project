@@ -8,7 +8,7 @@
     </div>
 </template>
 
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import {
     reactive,
     getCurrentInstance,
@@ -19,7 +19,8 @@ import {
     useAttrs,
 } from "vue";
 const { proxy } = getCurrentInstance() as any;
-
+import { getPosition } from "../compositionApi/getPosition"
+const { x, y } = getPosition()
 interface ListItem{
     name: string,
     age: number,
@@ -61,26 +62,26 @@ defineExpose({
 
 // 普通监听
 watch(num, (val:number):void => {
-    console.log(val, "watcher");
+    // console.log(val, "watcher");
 });
 
 // 深层监听
 watch(
     () => num,
     (val) => {
-        console.log(val.value, "deeep watcher");
+        // console.log(val.value, "deeep watcher");
     },
     { deep: true }
 );
 
 const slots = useSlots();
 const attrs = useAttrs();
-console.log(slots);
-console.log(attrs);
+// console.log(slots);
+// console.log(attrs);
 
-</script> -->
+</script>
 
-<script lang="ts">
+<!-- <script lang="ts">
 import { rowProps } from "element-plus";
 import { defineComponent, getCurrentInstance, ref, PropType } from "vue"
 import { getPosition } from "../compositionApi/getPosition"
@@ -122,6 +123,7 @@ export default defineComponent({
         // 暴露公共属性（函数）
         // console.log(context.expose)
         const ageAdd = (index: number): void => {
+            console.log("ageAdd++============")
             context.emit("ageAdd", index);
         };
 
@@ -132,6 +134,8 @@ export default defineComponent({
         
         const { x, y } = getPosition()
 
+        // 在setup直接调用相当于mounted
+        ageAdd(1)
         return {
             proxy,
             num,
@@ -141,7 +145,7 @@ export default defineComponent({
         }
     }, 
 })
-</script>
+</script> -->
 
 <style scoped lang="scss">
 .item {
