@@ -62,7 +62,7 @@ defineExpose({
 
 // 普通监听
 watch(num, (val:number):void => {
-    // console.log(val, "watcher");
+    console.log(val, "watcher----------");
 });
 
 // 深层监听

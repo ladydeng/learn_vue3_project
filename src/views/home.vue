@@ -39,6 +39,8 @@ const list = reactive<ListItem[]>([
     { name: "lilie", age: 18, intro: () => { console.log("my name is lilie") } },
 ]);
 
+console.log(list)
+
 const ageAdd = (index: number): void => {
     list[index].age = list[index].age + 1;
 };
