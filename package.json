@@ -13,6 +13,10 @@
     "esbuild-windows-64": "^0.15.18",
     "path": "^0.12.7",
     "pinia": "^2.0.29",
+    "three": "^0.160.1",
+    "three-css2drender": "^1.0.0",
+    "three-obj-mtl-loader": "^1.0.3",
+    "three-orbit-controls": "^82.1.0",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },

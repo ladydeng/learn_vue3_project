@@ -3,11 +3,15 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 const routes: Array<RouteRecordRaw> = [
     {
         path:"/",
-        redirect:"/home"
+        redirect:"/threejs"
     },
     {
         path:"/home",
         component: () => import("../views/home.vue")
+    },
+    {
+        path:"/threejs",
+        component: () => import("../views/threejs.vue")
     }
 ]
 

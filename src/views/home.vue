@@ -10,10 +10,11 @@
             :list="list"
             @ageAdd="ageAdd"
         />
+        <div v-for="(item, index) in list" :key="index">==========={{ item.name }}</div>
         <el-button type="danger" @click="changeChild()">调用子组件的方法</el-button>
         <el-button type="danger" @click="$store().changeSum(2)">点击sum-2</el-button>
         <div>{{ x }}---{{ y }}</div>
-        </div>
+    </div>
 </template>
 
 <!-- setup语法糖写法 -->
