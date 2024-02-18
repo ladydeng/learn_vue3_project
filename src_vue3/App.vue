@@ -6,10 +6,3 @@
 <script lang="ts">
 // console.log("setup")
 </script>
-
-<style lang="scss">
-#app{
-  padding: 0;
-}
-  
-</style>

@@ -6,6 +6,10 @@ const routes: Array<RouteRecordRaw> = [
         redirect:"/threejs"
     },
     {
+        path:"/home",
+        component: () => import("../views/home.vue")
+    },
+    {
         path:"/threejs",
         component: () => import("../views/threejs.vue")
     }

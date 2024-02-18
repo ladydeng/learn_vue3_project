@@ -1,5 +1,5 @@
 <template>
-  <div id="threeBox">13.stats查看threejs渲染帧率</div>
+  <div id="threeBox">11.动画渲染循环</div>
 </template>
 
 <script setup lang="ts">
@@ -8,15 +8,12 @@ import * as THREE from "three"
 
 // 引入轨道控制器扩展库OrbitControls.js
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-// 引入性能监视器
-import Stats from "three/addons/libs/stats.module.js"
 
 const initChart = () => {
     // 步骤一：
         // 创建3D场景对象Scene
         const scene = new THREE.Scene();
         scene.background = new THREE.Color( 0xdcdcdc )
-        /**
         //创建一个长方体几何对象Geometry
         const geometry = new THREE.BoxGeometry(200, 200, 200); 
         // 创建漫反射网络材质MeshLambertMaterial  受光照影响
@@ -28,18 +25,6 @@ const initChart = () => {
         // 两个参数分别为几何体geometry、材质material
         const mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
         mesh.position.set(0,0,0);
-        */
-    const num = 10
-    for(let i = 0; i < num; i++){
-        const geometry = new THREE.BoxGeometry(50,50,50)
-        const material = new THREE.MeshLambertMaterial({
-            color: 0x1aa034
-        })
-        const mesh = new THREE.Mesh(geometry, material)
-        const x = (Math.random() - 0.5) * 300
-        const y = (Math.random() - 0.5) * 300
-        const z = (Math.random() - 0.5) * 300
-        mesh.position.set(x,y,z)
         // AxesHelper：辅助观察的坐标系
         const axesHelper = new THREE.AxesHelper(350);
 
@@ -59,44 +44,38 @@ const initChart = () => {
         const spotLight = new THREE.SpotLight(0xffffff, 10000)
         spotLight.position.set(0,200,0)
 
-        scene.add(mesh).add(axesHelper).add(pointLight);
-    }
+        scene.add(mesh).add(axesHelper).add(spotLight);
 
     // 步骤二：
         // 实例化一个透视投影相机对象
         const camera = new THREE.PerspectiveCamera();
         camera.position.set(400, 500, 100); 
-        camera.lookAt(0,0,0);
+        camera.lookAt(mesh.position);
 
     // 步骤三：
         // 创建渲染器对象
         const renderer = new THREE.WebGLRenderer();
         // 定义threejs输出画布canvas的尺寸(单位:像素px)
-
-        // 1、局部渲染
-        // const width = 350;
-        // const height = 350; 
-
-        // 2、全局渲染
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        // 全屏情况下：设置观察范围长宽比aspect为窗口宽高比
-        camera.aspect = window.innerWidth / window.innerHeight
-        // 相机的一些属性发生变化，需要更新相机的投影矩阵
-        camera.updateProjectionMatrix() 
-
+        const width = 350;
+        const height = 350; 
         renderer.setSize(width, height);
         renderer.render(scene, camera);
         document.getElementById('threeBox').appendChild(renderer.domElement);
 
-        // 查看渲染帧率
-        const stats = new Stats()
-        document.body.appendChild(stats.domElement)
+    // 步骤四：
+        // 设置相机控件轨道控制器OrbitControls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        // 如果OrbitControls改变了相机参数，重新调用渲染器渲染三维场景
+        controls.addEventListener('change', function () {
+            // 设置了渲染循环,相机控件OrbitControls就不用再通过事件change执行renderer.render(scene, camera);，毕竟渲染循环一直在执行renderer.render(scene, camera);。
+            // renderer.render(scene, camera);
+        });
+
+    // 步骤五：
+        // 动画渲染循环
         function render(){
-            // 调用update方法刷新时间
-            stats.update()
             renderer.render(scene, camera)
-            // mesh.rotateY(0.01)
+            mesh.rotateY(0.01)
             requestAnimationFrame(render)
         }
         render()
@@ -110,9 +89,8 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-body{
-    margin: 0;
-    overflow: hidden;
+#threeBox{
+    border: 1px solid red;
 }
 
 </style>

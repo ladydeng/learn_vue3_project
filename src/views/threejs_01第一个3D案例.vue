@@ -1,7 +1,7 @@
 <template>
-    <div id="my-three"></div>
+    <div id="my-three">4-6、第一个3D案例</div>
 </template>
-​
+
 <script lang='ts' setup>
     import * as THREE from 'three'
     import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -35,13 +35,15 @@
     // mesh2.position.set(120,0,0);//设置mesh3模型对象的xyz坐标为120,0,0
     // scene.add(mesh2);
 
-    //添加光源 //会照亮场景里的全部物体（氛围灯），前提是物体是可以接受灯光的，这种灯是无方向的，即不会有阴影。
+    //添加光源
+    //环境光：会照亮场景里的全部物体（氛围灯），前提是物体是可以接受灯光的，这种灯是无方向的，即不会有阴影。
     const ambient = new THREE.AmbientLight(0xffffff, 0.4);
-    const light = new THREE.PointLight(0xffffff, 1);//点光源，color:灯光颜色，intensity:光照强度
-
     scene.add(ambient);
-    light.position.set(200,300,400);
-    scene.add(light);
+    
+    // 点光源
+    // const light = new THREE.PointLight(0xffffff, 1);//点光源，color:灯光颜色，intensity:光照强度
+    // light.position.set(200,300,400);
+    // scene.add(light);
 
     //创建一个透视相机，窗口宽度，窗口高度
     const width = window.innerWidth, height = window.innerHeight;
