@@ -92,17 +92,15 @@ const initChart = () => {
 
         // step：每次改变间隔  name:命名
         gui.add(pointLight, 'intensity', 100000, 900000).name('光照强度').step(100000).onChange(function(value){
-            // pointLight.intensity = value;
-            // renderer.render(scene, camera);
+            console.log(value)
+            pointLight.intensity = value;
+            renderer.render(scene, camera);
         });
 
         // addColor：颜色选择器
         gui.addColor(material, 'color').name('颜色').onChange(function(value){
-            // 如果执行了循环渲染就不用手动调用renderer.render(scene, camera)了，
-            // 也不用手动赋值material.color = value
-            
-            // material.color = value
-            // renderer.render(scene, camera);
+            material.color = value
+            renderer.render(scene, camera);
         })
 
         // addFolder分组
@@ -110,8 +108,8 @@ const initChart = () => {
         dirFolder.close()
         // 1、数组——下拉框
         dirFolder.add(mesh.position, 'x', [-200, 200]).onChange(function(value){
-            // mesh.position.x = value
-            // renderer.render(scene, camera);
+            mesh.position.x = value
+            renderer.render(scene, camera);
         })
         // 2、对象——下拉框
         dirFolder.add(mesh.position, 'y', {
@@ -119,13 +117,13 @@ const initChart = () => {
             center: 0,
             right: 200
         }).onChange(function(value){
-            // mesh.position.y = value
-            // renderer.render(scene, camera);
+            mesh.position.y = value
+            renderer.render(scene, camera);
         })
         // 3、直接传值——拖动条
         gui.add(mesh.position, 'z', -400, 400).onChange(function(value){
-            // mesh.position.z = value
-            // renderer.render(scene, camera);
+            mesh.position.z = value
+            renderer.render(scene, camera);
         })
 
 
