@@ -27,7 +27,8 @@ const initChart = () => {
         const material =new THREE.MeshLambertMaterial({
             color: 0x1aa034,
             opacity:1,
-            transparent:true
+            transparent:true,
+            wireframe:true, //线条模式渲染mesh对应的三角形数据
         });
 
         // 两个参数分别为几何体geometry、材质material
