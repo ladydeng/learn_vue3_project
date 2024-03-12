@@ -1,5 +1,5 @@
 <template>
-  <div id="threeBox">3.2 欧拉Euler与角度属性.rotation</div>
+  <div id="threeBox">3.1三维向量Vector3与模型位置(实际探讨的是模型位置position就是一个vector3)</div>
 </template>
 
 <script setup lang="ts">
@@ -18,19 +18,31 @@ const initChart = () => {
     scene.background = new THREE.Color(0xfcebeb)
 
     // 创建一个胶囊图形几何体
-    const geometry = new THREE.CapsuleGeometry(2, 2, 4, 8)
+    const geometry = new THREE.CapsuleGeometry(1, 1, 4, 8)
 
     // 创建材质对象
     const material = new THREE.MeshBasicMaterial({
         color: 0x44c1ff,
         wireframe:true,
     })
-    // material.color.set("#00ff00")
-    material.color.set("rgb(0,255,0)")
 
+    // 实例化一个三维向量对象
+    // const v3 = new THREE.Vector3(0,0,0)
+    // v3.set(1,0,0)
+    // v3.x = 100 //改变某个属性的值
     
     // 网络模型对象
     const mesh = new THREE.Mesh(geometry, material)
+    console.log(mesh.position)  //position属性就是一个三维向量对象，可使用三维向量的方式去改变某个属性的值
+    // 法一：
+    // mesh.position.set(0,0,1)
+    // 法二：
+    mesh.position.z = 1
+    // 平移
+    mesh.translateX(1)
+    // 缩放
+    mesh.scale.x = 2
+
     scene.add(mesh)
 
     // 相机
@@ -52,15 +64,6 @@ const initChart = () => {
     controls.addEventListener("change", function(){
         renderer.render(mesh, camera)
     })
-
-    function render(){
-        renderer.render(scene, camera)
-        mesh.rotateY(0.01)
-        // const axis = new THREE.Vector3(0,1,0);//向量axis
-        // mesh.rotateOnAxis(axis,Math.PI/8);//绕axis轴旋转π/8
-        requestAnimationFrame(render)
-    }
-    render()
 
 
 }
