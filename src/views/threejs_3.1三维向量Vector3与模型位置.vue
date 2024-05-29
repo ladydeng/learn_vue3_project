@@ -1,5 +1,5 @@
 <template>
-  <div id="threeBox">3.1三维向量Vector3与模型位置(实际探讨的是模型位置position就是一个vector3)</div>
+  <div id="threeBox">3.1三维向量Vector3与模型位置(实际探讨的是模型位置position就是一个vector3对象)</div>
 </template>
 
 <script setup lang="ts">
@@ -56,13 +56,13 @@ const initChart = () => {
     })
     renderer.setClearColor(0xe0e8f6, 0.9)
     renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.render(mesh, camera)
+    renderer.render(scene, camera)
     document.getElementById("threeBox").appendChild(renderer.domElement)
 
     // 轨道控制器
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.addEventListener("change", function(){
-        renderer.render(mesh, camera)
+        renderer.render(scene, camera)
     })
 
 

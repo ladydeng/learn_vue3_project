@@ -3,8 +3,9 @@
   <router-view></router-view>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 // console.log("setup")
+ 
 </script>
 
 <style lang="scss">

@@ -1,5 +1,5 @@
 <template>
-  <div id="threeBox">7、PBR材质与纹理贴图</div>
+  <div id="threeBox">6、加载外部三维模型(gltf)</div>
 </template>
 
 <script setup lang="ts">
@@ -17,34 +17,31 @@
     let startInit = () => {
         const scene = new THREE.Scene()
         scene.background = new THREE.Color(0xf7f8fc)
-
-
-        // const texture = new THREE.TextureLoader().load("../../src/assets/test.jpg")
-        // const material = new THREE.MeshBasicMaterial({
-        //     map: texture
-        // })
         
+        // const geometry = new THREE.BoxGeometry(2,2,2)
+        // const material = new THREE.MeshBasicMaterial({
+        //     color:0xc0e8f6
+        // })
+        // const mesh = new THREE.Mesh(geometry, material)
+        // scene.add(mesh)
 
-        const geometry = new THREE.BoxGeometry(8,8,8)
-        const textureCube = new THREE.CubeTextureLoader()
-            .setPath("../../src/assets/SwedishRoyalCastle/")
-            .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'])
+        
+        const loader = new GLTFLoader()
+        loader.load("/src/assets/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf", function( gltf ){
+            scene.add(gltf.scene)
 
-        //如果renderer.outputEncoding=THREE.sRGBEncoding;环境贴图需要保持一致
-        textureCube.encoding = THREE.sRGBEncoding;   
+            console.log(gltf.scene.children) //查看所有子节点
 
-        const material = new THREE.MeshStandardMaterial({
-            // color:0xc0e8f6, 
-            roughness: 0.0,   //粗糙度
-			metalness: 1,   //金属度
-            envMap: textureCube,
-            envMapIntensity: 1,
+            const helmet = gltf.scene.getObjectByName("node_damagedHelmet_-6514")
+            console.log(helmet.material)  // 可以根据节点名称获取节点，并改变节点属性
+
         })
 
 
+        const pointLight = new THREE.PointLight(0xffffff, 80000.0);
+        pointLight.position.set(200, 200, 200); 
+        scene.add(pointLight)
 
-        const mesh = new THREE.Mesh(geometry, material)
-        scene.add(mesh)
 
         
         

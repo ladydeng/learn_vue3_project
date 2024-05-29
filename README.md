@@ -13,3 +13,5 @@
          const obj = await fetch("url").then((res) => res.json())
       </script>
   `
+
+# 使用到的node版本号为16.16.0

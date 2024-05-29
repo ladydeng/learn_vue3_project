@@ -5,11 +5,13 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { resolve } from 'path'
 
+// 打包配置// "build": "vue-tsc --noEmit --skipLibCheck && vite build",
 import { fileURLToPath, URL } from "node:url"
 
 // https://vitejs.dev/config/  官方配置文档
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/dist/' : '/',  //开发或生产环境服务的公共基础路径
+  // base: process.env.NODE_ENV === 'production' ? '/dist/' : '/',  //开发或生产环境服务的公共基础路径
+  base: './',  //开发或生产环境服务的公共基础路径
   server: {
     // port: 4000, // 设置服务启动端口号
     // open: true, // 设置服务启动时是否自动打开浏览器

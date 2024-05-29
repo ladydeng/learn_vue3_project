@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
+import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from "vue-router"
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -12,7 +12,8 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(process.env.NODE_ENV === 'production' ? 'dist' : ''),
+    // history: createWebHistory(process.env.NODE_ENV === 'production' ? 'dist' : ''),
+    history: createWebHashHistory(process.env.NODE_ENV === '/'),
     routes
 })
 
