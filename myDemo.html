@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three.js 3D 地图</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; background-color: #0a192f; }
+    #map-container { width: 100vw; height: 100vh; }
+    .info-panel {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(10, 25, 47, 0.8);
+      color: #e6f1ff;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 14px;
+      z-index: 100;
+      max-width: 300px;
+    }
+    .info-panel h3 { margin-bottom: 10px; color: #64ffda; }
+    .info-panel p { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <div class="info-panel">
+    <h3>3D 地图演示</h3>
+    <p>操作: 鼠标左键旋转 / 右键平移 / 滚轮缩放</p>
+    <p>功能: 地形高度可视化、光照阴影、区域颜色区分</p>
+  </div>
+  <div id="map-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/three@latest/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/TextureLoader.js"></script>
+
+  <script>
+    // 初始化场景、相机、渲染器
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a192f);
+
+    // 相机设置
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      2000
+    );
+    camera.position.set(150, 100, 150);
+
+    // 渲染器
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.getElementById('map-container').appendChild(renderer.domElement);
+
+    // 控制器
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.1;
+    controls.maxPolarAngle = Math.PI / 2 - 0.1; // 限制垂直旋转角度
+
+    // 光照设置
+    // 方向光（模拟太阳光）
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    directionalLight.position.set(200, 300, 150);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.set(2048, 2048);
+    directionalLight.shadow.camera.left = -300;
+    directionalLight.shadow.camera.right = 300;
+    directionalLight.shadow.camera.top = 300;
+    directionalLight.shadow.camera.bottom = -300;
+    scene.add(directionalLight);
+
+    // 环境光
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(ambientLight);
+
+    // 生成3D地形数据
+    function generateTerrainData(width, depth, segments) {
+      const sizeX = width / segments;
+      const sizeZ = depth / segments;
+      const data = [];
+      
+      for (let z = 0; z <= segments; z++) {
+        for (let x = 0; x <= segments; x++) {
+          // 使用柏林噪声生成自然地形（简化版）
+          const xCoord = x * 0.1;
+          const zCoord = z * 0.1;
+          
+          // 多层噪声叠加，模拟不同地形特征
+          const height = (
+            Math.sin(xCoord) * 5 + 
+            Math.cos(zCoord) * 5 +
+            Math.sin((xCoord + zCoord) * 0.5) * 8 +
+            Math.cos((xCoord - zCoord) * 0.3) * 4
+          );
+          
+          // 添加随机小起伏
+          const random = (Math.random() - 0.5) * 2;
+          
+          data.push({
+            x: x * sizeX - width / 2,
+            z: z * sizeZ - depth / 2,
+            y: Math.max(0, height + random) // 确保高度不为负
+          });
+        }
+      }
+      return data;
+    }
+
+    // 创建地形网格
+    function createTerrain() {
+      const width = 300;    // 地形宽度
+      const depth = 300;    // 地形深度
+      const segments = 50;  // 分段数（越高越精细）
+      const terrainData = generateTerrainData(width, depth, segments);
+
+      // 创建平面几何体
+      const geometry = new THREE.PlaneGeometry(width, depth, segments, segments);
+      const vertices = geometry.attributes.position.array;
+
+      // 设置顶点高度
+      for (let i = 0; i < vertices.length; i += 3) {
+        const index = (i / 3) | 0;
+        vertices[i + 1] = terrainData[index].y; // 设置Y轴高度
+      }
+      geometry.attributes.position.needsUpdate = true;
+      geometry.computeVertexNormals(); // 重新计算法线，使光照更自然
+
+      // 创建高度纹理（根据高度生成颜色）
+      const colors = [];
+      const color = new THREE.Color();
+      
+      for (let i = 0; i < vertices.length; i += 3) {
+        const y = vertices[i + 1];
+        
+        // 根据高度设置颜色（海拔梯度）
+        if (y < 5) {
+          color.setHSL(0.55, 0.7, 0.3 + y * 0.02); // 低海拔 - 深绿
+        } else if (y < 12) {
+          color.setHSL(0.2, 0.6, 0.3 + (y - 5) * 0.015); // 中海拔 - 浅绿/土黄
+        } else if (y < 20) {
+          color.setHSL(0.1, 0.4, 0.5 - (y - 12) * 0.01); // 高海拔 - 棕色
+        } else {
+          color.setHSL(0.0, 0.0, 0.8 + (y - 20) * 0.01); // 极高海拔 - 白色（积雪）
+        }
+        
+        colors.push(color.r, color.g, color.b);
+      }
+      
+      geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+      // 创建材质
+      const material = new THREE.MeshStandardMaterial({
+        vertexColors: true,
+        roughness: 0.8,
+        metalness: 0.1,
+        side: THREE.DoubleSide
+      });
+
+      // 创建网格并设置
+      const terrain = new THREE.Mesh(geometry, material);
+      terrain.rotation.x = -Math.PI / 2; // 旋转使平面朝上
+      terrain.receiveShadow = true;
+      terrain.castShadow = true;
+
+      return terrain;
+    }
+
+    // 添加地形到场景
+    const terrain = createTerrain();
+    scene.add(terrain);
+
+    // 添加网格辅助线（可选）
+    const gridHelper = new THREE.GridHelper(300, 20, 0x1e3a8a, 0x1e3a8a);
+    gridHelper.position.y = 0.1; // 略高于地面，避免Z轴冲突
+    scene.add(gridHelper);
+
+    // 添加几个标记点（模拟城市/地标）
+    function addLandmarks() {
+      const landmarkPositions = [
+        { x: -80, z: 50, name: "城市A", height: 5 },
+        { x: 30, z: -70, name: "城市B", height: 8 },
+        { x: 100, z: 20, name: "城市C", height: 6 },
+        { x: -50, z: -90, name: "城市D", height: 4 }
+      ];
+
+      landmarkPositions.forEach(landmark => {
+        // 创建标记点几何体
+        const geometry = new THREE.CylinderGeometry(2, 2, landmark.height + 3, 32);
+        const material = new THREE.MeshStandardMaterial({ color: 0x64ffda });
+        const marker = new THREE.Mesh(geometry, material);
+        
+        marker.position.set(landmark.x, landmark.height + 1.5, landmark.z);
+        marker.castShadow = true;
+        scene.add(marker);
+
+        // 添加标记点顶部
+        const topGeometry = new THREE.SphereGeometry(1.5, 16, 16);
+        const topMaterial = new THREE.MeshStandardMaterial({ color: 0xff4757 });
+        const top = new THREE.Mesh(topGeometry, topMaterial);
+        top.position.set(0, landmark.height / 2 + 1.5, 0);
+        marker.add(top);
+      });
+    }
+
+    addLandmarks();
+
+    // 窗口大小调整
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // 动画循环
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
